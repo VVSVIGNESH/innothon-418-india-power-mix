@@ -1,6 +1,6 @@
 # India Power Mix Explorer: generation forecast to 2047 and regional mix
 
-ExxonMobil Innothon 2026 · Team 418 · Presenter: Vignsh
+ExxonMobil Innothon 2026 · Team 418 · Presenter: Vignesh
 
 - **Live dashboard:** https://vvsvignesh.github.io/innothon-418-india-power-mix/
 - **Everything here is generation (energy, TWh).** Installed capacity and consumption are not used to forecast or compare. Capacity plans appear in one place only: policy targets are converted to energy with stated load factors (see `outputs/step2_policy_levers.csv`).
