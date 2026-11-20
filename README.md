@@ -215,7 +215,3 @@ The dashboard reads only this repository's own outputs (`docs/data.json`, `docs/
 ## 8. Impact
 
 The dashboard lets reviewers trace any number to its inputs, change the assumptions that matter (growth, elasticity, population, urbanization, score weights, nuclear target, integration ceiling, carbon price) and see regional trade-offs and the grid CO₂ intensity against a net-zero 2070 path, instead of reading a single fixed forecast.
-
-## 9. Authorship and tools
-
-The analysis, assumptions and design choices were worked out by the team. Claude (an AI assistant from Anthropic) was used to help write and test the code and the dashboard and to draft these documents; the team reviewed the outputs and takes responsibility for them.
