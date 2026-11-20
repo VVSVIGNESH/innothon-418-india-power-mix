@@ -1,0 +1,169 @@
+case,fy,year,india_p50_twh
+baseline,2026-27,2027,1971.2
+baseline,2027-28,2028,2110.2
+baseline,2028-29,2029,2257.5
+baseline,2029-30,2030,2413.4
+baseline,2030-31,2031,2578.1
+baseline,2031-32,2032,2751.6
+baseline,2032-33,2033,2933.7
+baseline,2033-34,2034,3124.6
+baseline,2034-35,2035,3325.3
+baseline,2035-36,2036,3535.6
+baseline,2036-37,2037,3754.5
+baseline,2037-38,2038,3983.2
+baseline,2038-39,2039,4222.5
+baseline,2039-40,2040,4474.1
+baseline,2040-41,2041,4734.1
+baseline,2041-42,2042,5003.2
+baseline,2042-43,2043,5285.7
+baseline,2043-44,2044,5576.5
+baseline,2044-45,2045,5878.0
+baseline,2045-46,2046,6185.9
+baseline,2046-47,2047,6505.7
+elasticity does not fade,2026-27,2027,1971.3
+elasticity does not fade,2027-28,2028,2111.0
+elasticity does not fade,2028-29,2029,2259.8
+elasticity does not fade,2029-30,2030,2417.9
+elasticity does not fade,2030-31,2031,2586.5
+elasticity does not fade,2031-32,2032,2764.4
+elasticity does not fade,2032-33,2033,2952.9
+elasticity does not fade,2033-34,2034,3152.1
+elasticity does not fade,2034-35,2035,3363.1
+elasticity does not fade,2035-36,2036,3584.1
+elasticity does not fade,2036-37,2037,3816.8
+elasticity does not fade,2037-38,2038,4063.7
+elasticity does not fade,2038-39,2039,4324.7
+elasticity does not fade,2039-40,2040,4596.5
+elasticity does not fade,2040-41,2041,4880.9
+elasticity does not fade,2041-42,2042,5178.6
+elasticity does not fade,2042-43,2043,5491.7
+elasticity does not fade,2043-44,2044,5818.0
+elasticity does not fade,2044-45,2045,6159.3
+elasticity does not fade,2045-46,2046,6516.4
+elasticity does not fade,2046-47,2047,6890.7
+elasticity fades 40% (low scenario),2026-27,2027,1971.3
+elasticity fades 40% (low scenario),2027-28,2028,2108.4
+elasticity fades 40% (low scenario),2028-29,2029,2251.4
+elasticity fades 40% (low scenario),2029-30,2030,2400.0
+elasticity fades 40% (low scenario),2030-31,2031,2554.9
+elasticity fades 40% (low scenario),2031-32,2032,2714.5
+elasticity fades 40% (low scenario),2032-33,2033,2878.5
+elasticity fades 40% (low scenario),2033-34,2034,3047.8
+elasticity fades 40% (low scenario),2034-35,2035,3221.4
+elasticity fades 40% (low scenario),2035-36,2036,3398.8
+elasticity fades 40% (low scenario),2036-37,2037,3579.1
+elasticity fades 40% (low scenario),2037-38,2038,3762.9
+elasticity fades 40% (low scenario),2038-39,2039,3951.3
+elasticity fades 40% (low scenario),2039-40,2040,4140.5
+elasticity fades 40% (low scenario),2040-41,2041,4331.9
+elasticity fades 40% (low scenario),2041-42,2042,4525.2
+elasticity fades 40% (low scenario),2042-43,2043,4718.0
+elasticity fades 40% (low scenario),2043-44,2044,4914.5
+elasticity fades 40% (low scenario),2044-45,2045,5108.3
+elasticity fades 40% (low scenario),2045-46,2046,5302.2
+elasticity fades 40% (low scenario),2046-47,2047,5497.3
+no EV/data-centre uplift,2026-27,2027,1970.7
+no EV/data-centre uplift,2027-28,2028,2108.4
+no EV/data-centre uplift,2028-29,2029,2253.5
+no EV/data-centre uplift,2029-30,2030,2406.1
+no EV/data-centre uplift,2030-31,2031,2566.2
+no EV/data-centre uplift,2031-32,2032,2734.4
+no EV/data-centre uplift,2032-33,2033,2911.2
+no EV/data-centre uplift,2033-34,2034,3096.5
+no EV/data-centre uplift,2034-35,2035,3291.2
+no EV/data-centre uplift,2035-36,2036,3493.4
+no EV/data-centre uplift,2036-37,2037,3704.2
+no EV/data-centre uplift,2037-38,2038,3925.5
+no EV/data-centre uplift,2038-39,2039,4154.9
+no EV/data-centre uplift,2039-40,2040,4395.4
+no EV/data-centre uplift,2040-41,2041,4643.2
+no EV/data-centre uplift,2041-42,2042,4901.4
+no EV/data-centre uplift,2042-43,2043,5166.5
+no EV/data-centre uplift,2043-44,2044,5440.6
+no EV/data-centre uplift,2044-45,2045,5725.4
+no EV/data-centre uplift,2045-46,2046,6020.2
+no EV/data-centre uplift,2046-47,2047,6321.6
+uplift 0.3pp/yr,2026-27,2027,1971.9
+uplift 0.3pp/yr,2027-28,2028,2112.2
+uplift 0.3pp/yr,2028-29,2029,2261.6
+uplift 0.3pp/yr,2029-30,2030,2420.6
+uplift 0.3pp/yr,2030-31,2031,2589.4
+uplift 0.3pp/yr,2031-32,2032,2767.4
+uplift 0.3pp/yr,2032-33,2033,2955.2
+uplift 0.3pp/yr,2033-34,2034,3152.8
+uplift 0.3pp/yr,2034-35,2035,3361.1
+uplift 0.3pp/yr,2035-36,2036,3578.3
+uplift 0.3pp/yr,2036-37,2037,3805.5
+uplift 0.3pp/yr,2037-38,2038,4045.1
+uplift 0.3pp/yr,2038-39,2039,4294.3
+uplift 0.3pp/yr,2039-40,2040,4556.5
+uplift 0.3pp/yr,2040-41,2041,4827.9
+uplift 0.3pp/yr,2041-42,2042,5111.7
+uplift 0.3pp/yr,2042-43,2043,5404.3
+uplift 0.3pp/yr,2043-44,2044,5708.1
+uplift 0.3pp/yr,2044-45,2045,6024.9
+uplift 0.3pp/yr,2045-46,2046,6354.2
+uplift 0.3pp/yr,2046-47,2047,6692.4
+"faster urbanization (+0.15pp/yr, assumption)",2026-27,2027,1972.5
+"faster urbanization (+0.15pp/yr, assumption)",2027-28,2028,2114.1
+"faster urbanization (+0.15pp/yr, assumption)",2028-29,2029,2265.7
+"faster urbanization (+0.15pp/yr, assumption)",2029-30,2030,2427.9
+"faster urbanization (+0.15pp/yr, assumption)",2030-31,2031,2601.1
+"faster urbanization (+0.15pp/yr, assumption)",2031-32,2032,2784.1
+"faster urbanization (+0.15pp/yr, assumption)",2032-33,2033,2977.4
+"faster urbanization (+0.15pp/yr, assumption)",2033-34,2034,3181.3
+"faster urbanization (+0.15pp/yr, assumption)",2034-35,2035,3396.6
+"faster urbanization (+0.15pp/yr, assumption)",2035-36,2036,3621.5
+"faster urbanization (+0.15pp/yr, assumption)",2036-37,2037,3857.3
+"faster urbanization (+0.15pp/yr, assumption)",2037-38,2038,4106.2
+"faster urbanization (+0.15pp/yr, assumption)",2038-39,2039,4365.7
+"faster urbanization (+0.15pp/yr, assumption)",2039-40,2040,4639.3
+"faster urbanization (+0.15pp/yr, assumption)",2040-41,2041,4922.9
+"faster urbanization (+0.15pp/yr, assumption)",2041-42,2042,5220.2
+"faster urbanization (+0.15pp/yr, assumption)",2042-43,2043,5527.2
+"faster urbanization (+0.15pp/yr, assumption)",2043-44,2044,5846.7
+"faster urbanization (+0.15pp/yr, assumption)",2044-45,2045,6180.6
+"faster urbanization (+0.15pp/yr, assumption)",2045-46,2046,6528.1
+"faster urbanization (+0.15pp/yr, assumption)",2046-47,2047,6885.8
+GDP growth -1pp,2026-27,2027,1951.8
+GDP growth -1pp,2027-28,2028,2068.8
+GDP growth -1pp,2028-29,2029,2191.5
+GDP growth -1pp,2029-30,2030,2320.0
+GDP growth -1pp,2030-31,2031,2454.6
+GDP growth -1pp,2031-32,2032,2594.6
+GDP growth -1pp,2032-33,2033,2740.3
+GDP growth -1pp,2033-34,2034,2890.9
+GDP growth -1pp,2034-35,2035,3048.0
+GDP growth -1pp,2035-36,2036,3209.6
+GDP growth -1pp,2036-37,2037,3376.6
+GDP growth -1pp,2037-38,2038,3549.6
+GDP growth -1pp,2038-39,2039,3727.1
+GDP growth -1pp,2039-40,2040,3911.5
+GDP growth -1pp,2040-41,2041,4101.9
+GDP growth -1pp,2041-42,2042,4297.6
+GDP growth -1pp,2042-43,2043,4498.5
+GDP growth -1pp,2043-44,2044,4703.7
+GDP growth -1pp,2044-45,2045,4912.5
+GDP growth -1pp,2045-46,2046,5125.6
+GDP growth -1pp,2046-47,2047,5344.9
+GDP growth +1pp,2026-27,2027,1990.9
+GDP growth +1pp,2027-28,2028,2152.4
+GDP growth +1pp,2028-29,2029,2325.3
+GDP growth +1pp,2029-30,2030,2509.9
+GDP growth +1pp,2030-31,2031,2707.5
+GDP growth +1pp,2031-32,2032,2917.9
+GDP growth +1pp,2032-33,2033,3140.4
+GDP growth +1pp,2033-34,2034,3377.8
+GDP growth +1pp,2034-35,2035,3629.0
+GDP growth +1pp,2035-36,2036,3894.9
+GDP growth +1pp,2036-37,2037,4177.2
+GDP growth +1pp,2037-38,2038,4475.0
+GDP growth +1pp,2038-39,2039,4788.1
+GDP growth +1pp,2039-40,2040,5118.0
+GDP growth +1pp,2040-41,2041,5467.0
+GDP growth +1pp,2041-42,2042,5833.1
+GDP growth +1pp,2042-43,2043,6214.8
+GDP growth +1pp,2043-44,2044,6613.7
+GDP growth +1pp,2044-45,2045,7033.2
+GDP growth +1pp,2045-46,2046,7470.9
+GDP growth +1pp,2046-47,2047,7927.8

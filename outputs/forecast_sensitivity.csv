@@ -1,0 +1,9 @@
+scenario,india_2046_47_median_twh,vs_baseline_%
+baseline,6506.0,0.0
+elasticity does not fade,6891.0,5.9
+elasticity fades 40% (low scenario),5497.0,-15.5
+no EV/data-centre uplift,6322.0,-2.8
+uplift 0.3pp/yr,6692.0,2.9
+"faster urbanization (+0.15pp/yr, assumption)",6886.0,5.8
+GDP growth -1pp,5345.0,-17.8
+GDP growth +1pp,7928.0,21.9

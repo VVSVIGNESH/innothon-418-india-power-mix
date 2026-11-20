@@ -1,0 +1,37 @@
+sector,station,state,region,gen_gwh_fy2025_26
+Central,AGARTALA GT,Tripura,NorthEast,557.12
+Central,KATHALGURI CCPP,Assam,NorthEast,1244.18
+Central,MONARCHAK CCPP,Tripura,NorthEast,459.32
+Central,ANTA CCPP,Rajasthan,North,251.28
+Central,AURAIYA CCPP,Uttar Pradesh,North,358.83
+Central,DADRI CCPP,Uttar Pradesh,North,425.38
+Central,FARIDABAD CCPP,Haryana,North,185.50
+Central,GANDHAR CCPP,Gujarat,West,430.33
+Central,KAWAS CCPP,Gujarat,West,420.90
+Central,TRIPURA CCPP (ONGC),Tripura,NorthEast,3880.19
+Central,RATNAGIRI CCPP (RGPPL),Maharashtra,West,866.13
+State,I.P. CCPP,Delhi,North,322.78
+State,PRAGATI CCGT-III,Delhi,North,1599.06
+State,PRAGATI CCPP,Delhi,North,963.50
+State,DHOLPUR CCPP,Rajasthan,North,10.06
+State,RAMGARH CCPP,Rajasthan,North,645.99
+State,PIPAVAV CCPP,Gujarat,West,90.14
+State,DHUVARAN CCPP,Gujarat,West,81.24
+State,UTRAN CCPP,Gujarat,West,293.11
+State,HAZIRA CCPP EXT,Gujarat,West,202.57
+State,URAN CCPP,Maharashtra,West,2725.57
+State,YELAHANKA CCPP,Karnataka,South,732.33
+State,KARAIKAL CCPP,Puducherry,South,184.66
+State,VALUTHUR CCPP,Tamil Nadu,South,643.89
+State,KUTTALAM CCPP,Tamil Nadu,South,600.84
+State,LAKWA GT,Assam,NorthEast,383.12
+State,NAMRUP CCPP,Assam,NorthEast,747.99
+State,LAKWA REPLACEMENT,Assam,NorthEast,485.10
+State,ROKHIA GT,Tripura,NorthEast,143.64
+Private,TROMBAY CCPP,Maharashtra,West,1075.83
+Private,GAMA CCPP (Kashipur),Uttarakhand,North,157.40
+Private,SRAVANTHI CCPP,Andhra Pradesh,South,319.72
+Private,DGEN MEGA CCPP,Gujarat,West,1128.15
+Private,SUGEN CCPP,Gujarat,West,2709.65
+Private,UNOSUGEN CCPP,Gujarat,West,389.37
+Private,KONDAPALLI EXTN,Andhra Pradesh,South,311.49

@@ -1,0 +1,407 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>India Power Mix Explorer</title>
+<style>
+:root{
+  --bg:#f6f7f9;--card:#ffffff;--ink:#16202e;--mute:#5a6678;--line:#dde2ea;--accent:#0f6e6e;--accent-soft:#e3f1f1;--warn:#b45309;
+  --coal:#4b5563;--gas:#9b6fb5;--nuclear:#e07b2a;--hydro:#2f7fc1;--solar:#e3b012;--wind:#1fa58f;
+  --band:rgba(15,110,110,.16);--shadow:0 1px 2px rgba(16,24,40,.06);
+}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
+  --bg:#0f141b;--card:#171e28;--ink:#e6ebf2;--mute:#9aa6b8;--line:#2a3442;--accent:#4fc3c3;--accent-soft:#16302f;--warn:#f0a35a;
+  --coal:#9aa5b4;--gas:#b891d1;--nuclear:#f09a50;--hydro:#5aa5e6;--solar:#f0c53a;--wind:#3cc7ae;--band:rgba(79,195,195,.2);--shadow:none}}
+:root[data-theme="dark"]{
+  --bg:#0f141b;--card:#171e28;--ink:#e6ebf2;--mute:#9aa6b8;--line:#2a3442;--accent:#4fc3c3;--accent-soft:#16302f;--warn:#f0a35a;
+  --coal:#9aa5b4;--gas:#b891d1;--nuclear:#f09a50;--hydro:#5aa5e6;--solar:#f0c53a;--wind:#3cc7ae;--band:rgba(79,195,195,.2);--shadow:none}
+*{box-sizing:border-box}
+html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.45 system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif}
+.wrap{max-width:1320px;margin:0 auto;padding:16px}
+header h1{font-size:22px;margin:0 0 2px}
+header p{margin:0;color:var(--mute);max-width:900px}
+.badge{display:inline-block;font-size:11px;padding:2px 8px;border-radius:99px;background:var(--accent-soft);color:var(--accent);margin-right:6px;font-weight:600}
+.panel{position:static;z-index:20;background:var(--bg);padding:10px 0 8px;margin-top:8px;border-bottom:1px solid var(--line)}
+.panel-inner{display:grid;grid-template-columns:repeat(auto-fit,minmax(170px,1fr));gap:8px 12px;align-items:end}
+.f{display:flex;flex-direction:column;gap:3px;min-width:0}
+.f label,.f .lab{font-size:11px;font-weight:600;text-transform:uppercase;letter-spacing:.04em;color:var(--mute)}
+select,input[type=number],button{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:6px 8px;min-width:0;width:100%}
+button{cursor:pointer;width:auto}
+button.on{background:var(--accent);color:#fff;border-color:var(--accent)}
+input[type=range]{width:100%;accent-color:var(--accent)}
+.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:5px;padding:4px 9px;border:1px solid var(--line);border-radius:99px;background:var(--card);cursor:pointer;font-size:13px;user-select:none}
+.chip input{margin:0;accent-color:var(--accent)}
+.chip i{width:10px;height:10px;border-radius:3px;display:inline-block}
+.chk{display:flex;gap:6px;align-items:center;font-size:13px}
+.seg{display:inline-flex;border:1px solid var(--line);border-radius:8px;overflow:hidden}
+.seg button{border:0;border-radius:0;background:var(--card);padding:6px 10px}
+.seg button.on{background:var(--accent);color:#fff}
+.seg button+button{border-left:1px solid var(--line)}
+.kpis{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:10px;margin:12px 0}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:10px 12px;box-shadow:var(--shadow)}
+.kpi .l{font-size:11px;color:var(--mute);text-transform:uppercase;letter-spacing:.04em;font-weight:600}
+.kpi .v{font-size:24px;font-weight:700;line-height:1.15}
+.kpi .s{font-size:12px;color:var(--mute)}
+.grid{display:grid;grid-template-columns:repeat(12,1fr);gap:12px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px 14px;box-shadow:var(--shadow);min-width:0}
+.card h2{font-size:15px;margin:0 0 2px}
+.card .sub{color:var(--mute);font-size:12px;margin:0 0 8px}
+.c4{grid-column:span 4}.c5{grid-column:span 5}.c6{grid-column:span 6}.c7{grid-column:span 7}.c8{grid-column:span 8}.c12{grid-column:span 12}
+@media(min-width:701px){.panel.pin{position:sticky;top:0}}
+@media(max-width:980px){.c4,.c5,.c6,.c7,.c8{grid-column:span 12}}
+.chart{width:100%;position:relative}
+svg{display:block;width:100%;height:auto;overflow:visible}
+svg text{fill:var(--mute);font-size:11px}
+.axis line,.axis path{stroke:var(--line)}
+.grid-l{stroke:var(--line);stroke-dasharray:2 3}
+.legend{display:flex;flex-wrap:wrap;gap:4px 12px;margin-top:6px;font-size:12px;color:var(--mute)}
+.legend span{display:inline-flex;align-items:center;gap:5px}
+.legend i{width:12px;height:3px;display:inline-block;border-radius:2px}
+#tip{position:fixed;z-index:50;pointer-events:none;background:var(--ink);color:var(--bg);padding:6px 9px;border-radius:8px;font-size:12px;display:none;max-width:260px;box-shadow:0 4px 14px rgba(0,0,0,.25)}
+#tip b{display:block;margin-bottom:2px}
+.tbl{width:100%;border-collapse:collapse;font-size:13px}
+.tbl th,.tbl td{padding:5px 7px;border-bottom:1px solid var(--line);text-align:right;white-space:nowrap}
+.tbl th:first-child,.tbl td:first-child{text-align:left;white-space:normal}
+.tbl th{font-size:11px;text-transform:uppercase;letter-spacing:.03em;color:var(--mute)}
+.tbl tr.sel td{background:var(--accent-soft);font-weight:600}
+.scroll{overflow-x:auto}
+.map svg{overflow:hidden;max-width:440px;margin:0 auto}
+.map path{stroke:var(--card);stroke-width:.5;cursor:pointer;transition:opacity .15s}
+.map path.sel{stroke:var(--ink);stroke-width:1.6}
+.map text{font-size:9px;font-weight:700;fill:#fff;paint-order:stroke;stroke:rgba(0,0,0,.55);stroke-width:2px;pointer-events:none;text-anchor:middle}
+.grad{height:8px;border-radius:4px;background:linear-gradient(90deg,rgba(15,110,110,.12),var(--accent))}
+.note{font-size:12px;color:var(--mute)}
+.pill-ok{color:#1b8a4a;font-weight:700}.pill-no{color:var(--warn);font-weight:700}
+details{border-top:1px solid var(--line);padding:8px 0}
+summary{cursor:pointer;font-weight:600}
+.rank{display:grid;gap:5px;margin-top:6px}
+.rank div{display:grid;grid-template-columns:78px 1fr 70px;gap:8px;align-items:center;font-size:12px;cursor:pointer}
+.rank .bar{height:10px;border-radius:5px;background:var(--line);overflow:hidden}
+.rank .bar i{display:block;height:100%;background:var(--accent)}
+.rank div.sel b{color:var(--accent)}
+
+.labgrid{display:grid;grid-template-columns:1fr 1fr;gap:18px}
+@media(max-width:900px){.labgrid{grid-template-columns:1fr}}
+.sl{margin:6px 0}.sl label{display:flex;justify-content:space-between;font-size:12px;color:var(--mute);gap:8px}.sl label b{color:var(--ink)}
+.lab-h{font-size:13px;font-weight:700;margin:2px 0 4px}
+.why{font-size:13px}.why h3{font-size:13px;margin:0 0 4px}.why p{margin:4px 0}
+.tag2{display:inline-block;font-size:11px;padding:1px 7px;border-radius:99px;background:var(--accent-soft);color:var(--accent);font-weight:600;margin-right:4px}
+.dpos{color:#1b8a4a}.dneg{color:var(--warn)}
+footer{color:var(--mute);font-size:12px;margin:18px 0 8px}
+</style>
+</head>
+<body>
+<div class="wrap">
+<header>
+  <h1>India Power Mix Explorer</h1>
+  <p><span class="badge">Team 418</span><span class="badge">ExxonMobil Innothon 2026</span>Electricity <b>generation</b> forecast to 2047 (Step 1) and region-specific generation mix (Step 2) for the five CEA regions. All figures are generation in TWh by financial-year end (2027 = FY2026-27). Installed capacity and consumption are not used.</p>
+</header>
+
+<section class="panel" aria-label="Filters">
+ <div class="panel-inner">
+  <div class="f"><label for="year">Year <b id="yearv">2035</b></label>
+    <div class="row" style="flex-wrap:nowrap"><button id="play" title="Play through years" style="padding:5px 9px">▶</button><input id="year" type="range" min="2027" max="2047" value="2035"></div></div>
+  <div class="f"><label for="region">Region</label><select id="region"></select></div>
+  <div class="f"><label for="sc1">Step 1 · growth scenario</label><select id="sc1"></select></div>
+  <div class="f"><label for="sc2">Step 2 · growth scenario</label><select id="sc2"></select></div>
+  <div class="f"><label for="variant">Step 2 · policy variant</label><select id="variant"></select></div>
+  <div class="f"><label for="cmp">Compare with variant</label><select id="cmp"></select></div>
+  <div class="f"><span class="lab">Units</span><div class="seg" id="unit"><button data-v="twh" class="on">TWh</button><button data-v="pct">% share</button></div></div>
+  <div class="f"><span class="lab">Mix chart type</span><div class="seg" id="ctype"><button data-v="area" class="on">Area</button><button data-v="bars">Bars</button><button data-v="lines">Lines</button></div></div>
+  <div class="f"><label for="y0">Chart years from – to</label><div class="row" style="flex-wrap:nowrap"><select id="y0"></select><select id="y1"></select></div></div>
+  <div class="f"><label for="tpop">Population 2047 <b id="tpopv">1.64 bn</b></label><input type="range" id="tpop" min="1.5" max="1.8" step="0.01" value="1.64"></div>
+  <div class="f"><label for="turb">Urbanization uplift <b id="turbv">0.00 pp/yr</b></label><input type="range" id="turb" min="0" max="0.5" step="0.01" value="0"></div>
+  <div class="f"><label for="map">Map shows</label><select id="map"><option value="gen">Generation (Step 1)</option><option value="chg">Growth since 2027 (Step 1)</option><option value="share">Share of a source (Step 2)</option><option value="mixtwh">TWh of a source (Step 2)</option><option value="pop">Population (projected)</option><option value="pc">Generation per person (kWh)</option><option value="urb">Urban share 2011 (Census)</option></select></div>
+  <div class="f"><label for="msrc">Source (map, explorer)</label><select id="msrc"></select></div>
+ </div>
+ <div class="row" style="margin-top:8px;gap:6px">
+  <span class="lab" style="font-size:11px;font-weight:600;text-transform:uppercase;color:var(--mute)">Sources</span><span id="srcchips" class="row" style="gap:6px"></span>
+  <label class="chk"><input type="checkbox" id="band" checked> P10–P90 band</label>
+  <label class="chk"><input type="checkbox" id="ovs"> All growth scenarios</label>
+  <label class="chk"><input type="checkbox" id="ovn"> Sensitivity cases (India)</label>
+  <label class="chk"><input type="checkbox" id="yoy"> Step 1 as yearly growth %</label>
+  <label class="chk"><input type="checkbox" id="uselab"> <b>Use Model-lab results in all views</b></label>
+  <label class="chk"><input type="checkbox" id="pin"> Pin filters while scrolling</label>
+  <label class="chk"><input type="checkbox" id="sync" checked> Keep Step 2 scenario = Step 1</label>
+  <button id="reset">Reset</button>
+ </div>
+</section>
+
+<div id="labbanner" style="display:none;margin-top:10px;padding:8px 12px;border-radius:10px;background:var(--accent-soft);color:var(--ink);font-size:13px"></div>
+<section class="kpis" id="kpis"></section>
+
+<section class="grid">
+ <div class="card c5"><h2>India map · five CEA regions</h2><p class="sub" id="mapsub"></p>
+   <div class="map" id="mapbox"></div><div class="row" style="justify-content:space-between"><span class="note" id="gmin"></span><div class="grad" style="flex:1"></div><span class="note" id="gmax"></span></div>
+   <div class="rank" id="rank"></div></div>
+ <div class="card c7"><h2>Step 1 · Generation forecast</h2><p class="sub" id="s1sub"></p><div class="chart" id="ch1"></div><div class="legend" id="lg1"></div></div>
+
+ <div class="card c7"><h2>Step 2 · Generation mix over time</h2><p class="sub" id="s2sub"></p><div class="chart" id="ch2"></div><div class="legend" id="lg2"></div></div>
+ <div class="card c5"><h2>Regional mix in the selected year</h2><p class="sub" id="s3sub"></p><div class="chart" id="ch3"></div></div>
+
+ <div class="card c7"><h2>Source explorer with uncertainty</h2><p class="sub" id="s4sub"></p><div class="chart" id="ch4"></div><div class="legend" id="lg4"></div></div>
+ <div class="card c5"><h2>Policy variants side by side</h2><p class="sub" id="s5sub"></p><div class="scroll"><table class="tbl" id="vt"></table></div></div>
+
+ <div class="card c7"><h2>Policy check · grid CO₂ intensity (India)</h2><p class="sub" id="s6sub"></p><div class="chart" id="ch6"></div><div class="legend" id="lg6"></div><p class="note" id="pnote"></p></div>
+ <div class="card c5"><h2>Regional strategy indicators</h2><p class="sub">Share of regional generation, 2027 → 2047 (Main variant, central), with resource context.</p><div class="scroll"><table class="tbl" id="it"></table></div></div>
+
+
+ <div class="card c12" id="lab"><h2>Model lab · change the inputs and re-run both models live</h2>
+  <p class="sub">The page re-runs JavaScript ports of the Step 1 and Step 2 Python models on your inputs (4,000 Step 1 draws; Step 2 central run in milliseconds). Region, scenario, year and source filters above apply to the results. Random draws differ from the saved Python run, so expect small differences.</p>
+  <div class="row" style="margin-bottom:8px"><span class="tag2">Check</span><span class="note" id="labcheck"></span></div>
+  <div class="labgrid">
+   <div>
+    <div class="lab-h">Step 1 · generation forecast inputs</div>
+    <div class="f"><label for="l1p">Start from saved scenario</label><select id="l1p"></select></div>
+    <div id="l1s"></div>
+    <div class="row"><div class="f" style="flex:1"><label for="lband">Uncertainty band</label><select id="lband"><option value="5,95">P5–P95</option><option value="10,90" selected>P10–P90</option><option value="25,75">P25–P75 (central half)</option></select></div>
+    <div class="f" style="flex:1"><label for="ln">Monte Carlo draws</label><select id="ln"><option>1000</option><option>2000</option><option selected>4000</option><option>8000</option></select></div></div>
+   </div>
+   <div>
+    <div class="lab-h">Step 2 · mix rules and score weights</div>
+    <div class="f"><label for="l2p">Start from saved policy variant</label><select id="l2p"></select></div>
+    <div id="l2s"></div>
+    <div class="row"><label class="chk"><input type="checkbox" id="lres" checked> Use resource-potential weight</label><label class="chk"><input type="checkbox" id="lfloor"> NEP/NGAP wind+solar floor</label><label class="chk"><input type="checkbox" id="lnz"> Net-zero intensity cap</label></div>
+   </div>
+  </div>
+  <div class="row" style="margin:10px 0 4px"><button id="l2run" class="on">Add Step 2 uncertainty</button><select id="l2n" style="width:auto"><option>20</option><option selected>40</option><option>80</option></select><span class="note">draws of demand, national rules and score weights → band on the source chart</span><button id="lsens">Run Step 1 sensitivity cases with band</button></div>
+  <div class="grid" style="margin-top:10px">
+   <div class="card c6" style="box-shadow:none"><h2>Live Step 1 vs saved</h2><p class="sub" id="lsub1"></p><div class="chart" id="lc1"></div><div class="legend" id="llg1"></div></div>
+   <div class="card c6" style="box-shadow:none"><h2>Live Step 2 mix</h2><p class="sub" id="lsub2"></p><div class="chart" id="lc2"></div><div class="legend" id="llg2"></div></div>
+   <div class="card c6" style="box-shadow:none"><h2>Live source explorer with band</h2><p class="sub" id="lsub3"></p><div class="chart" id="lc3"></div><div class="legend" id="llg3"></div></div>
+   <div class="card c6" style="box-shadow:none"><h2>2047 results, live vs saved</h2><p class="sub" id="lsub4"></p><div class="scroll"><table class="tbl" id="lt4"></table></div></div>
+   <div class="card c12" id="lsenscard" style="box-shadow:none;display:none"><h2>Step 1 sensitivity cases (India, 2047)</h2><p class="sub" id="lsub5"></p><div class="scroll"><table class="tbl" id="lt5"></table></div></div>
+  </div></div>
+
+ <div class="card c12 why"><h2>Why this mix · reasoning for the selected region and source</h2><p class="sub">Follows the Region and Source filters; numbers come from the selected variant and scenario.</p><div class="labgrid"><div id="whyr"></div><div id="whys"></div></div></div>
+ <div class="card c12"><h2>Method, policy levers and limits</h2>
+  <details open><summary>How to read this dashboard</summary><p class="note">Step 1 grows each region's FY2025-26 generation with income per person × electricity elasticity (~1.0, fading 0–20%), population growth and a small EV/data-centre uplift, across 20,000 Monte Carlo draws. Step 2 allocates the national path by source to regions with a seven-factor score (cost, resource, environment, security, infrastructure, policy, land) and RAS balancing, across 150 draws; coal is the balancing source. Bands show P10–P90 of the draws.</p></details>
+  <details><summary>Policy levers and their sources</summary><div class="scroll"><table class="tbl" id="lt"></table></div></details>
+  <details><summary>Limits to keep in mind</summary><p class="note">Wind and solar are limited by an integration ceiling (a storage/grid proxy), which sets the national split; coal therefore still rises in absolute terms before falling in some variants. Capacity-plan targets come from secondary sources and are converted to energy with load factors (solar 22%, wind 30%). Northeast gas is an artefact of small numbers. Sensitivity cases exist for India only. Map shows the five CEA regions; Andaman &amp; Nicobar (in East) and Lakshadweep (in South) are drawn as inset islands; Lakshadweep is shown as schematic dots at approximate island positions.</p></details>
+ </div>
+</section>
+<footer>Model outputs precomputed on CPU (Python/NumPy). Data files: data.json (outputs) and geo.json (simplified state outlines, grouped to regions).</footer>
+</div>
+<div id="tip"></div>
+
+<script>
+const SRC=['coal','gas','nuclear','hydro','solar','wind'];
+const SNAME={coal:'Coal',gas:'Natural gas',nuclear:'Nuclear',hydro:'Hydro',solar:'Solar',wind:'Wind'};
+const REG=['India','North','West','South','East','NorthEast'];
+const EF={coal:.95,gas:.45};
+const cv=n=>getComputedStyle(document.documentElement).getPropertyValue('--'+n).trim();
+let D,GEO;
+const DEF={year:2035,region:'India',sc1:'Main (all uncertainty)',sc2:'Main (all uncertainty)',variant:'Main (policy-weighted, nuclear ~9%)',cmp:'none',unit:'twh',ctype:'area',y0:2027,y1:2047,map:'gen',msrc:'solar',band:true,ovs:false,ovn:false,yoy:false,sync:true,useLab:false,src:{coal:1,gas:1,nuclear:1,hydro:1,solar:1,wind:1}};
+let S=JSON.parse(JSON.stringify(DEF));
+const $=id=>document.getElementById(id);
+const f0=v=>Math.round(v).toLocaleString('en-IN'),f1=v=>(Math.round(v*10)/10).toLocaleString('en-IN'),fp=v=>(Math.round(v*10)/10)+'%';
+const fmt=v=>S.unit==='pct'?fp(v):f0(v)+' TWh';
+const ix=y=>y-2027;
+const mixOf=(sc,va,rg)=>D.mix[sc][va][rg];
+const tot=(m,i)=>SRC.reduce((a,s)=>a+m[s][i],0);
+
+function tipShow(e,html){const t=$('tip');t.innerHTML=html;t.style.display='block';const w=t.offsetWidth,x=Math.min(e.clientX+14,innerWidth-w-8);t.style.left=Math.max(4,x)+'px';t.style.top=(e.clientY+14)+'px'}
+function tipHide(){$('tip').style.display='none'}
+function ticks(max,n=4){const raw=max/n,p=Math.pow(10,Math.floor(Math.log10(raw||1))),m=raw/p,st=(m<=1?1:m<=2?2:m<=5?5:10)*p;const a=[];for(let v=0;;v+=st){a.push(v);if(v>=max-1e-9)break}return a}
+
+/* generic chart: lines (with optional band) or stacked, drawn in SVG */
+function chart(el,o){
+  const W=Math.max(300,el.clientWidth),H=o.h||260,L=48,R=14,T=10,B=24;
+  const yrs=o.years,n=yrs.length,x=i=>L+(n===1?0:i*(W-L-R)/(n-1));
+  let ymin=o.ymin??0,ymax=o.ymax;
+  const tk=o.ticks||ticks(ymax,4);ymax=tk[tk.length-1];
+  const y=v=>T+(1-(v-ymin)/(ymax-ymin||1))*(H-T-B);
+  let s=`<svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${o.label||'chart'}">`;
+  tk.forEach(v=>{s+=`<line class="grid-l" x1="${L}" x2="${W-R}" y1="${y(v)}" y2="${y(v)}"/><text x="${L-6}" y="${y(v)+4}" text-anchor="end">${o.yf?o.yf(v):f0(v)}</text>`});
+  const step=Math.ceil(n/(W<500?5:8));
+  yrs.forEach((yr,i)=>{if(i%step===0||i===n-1)s+=`<text x="${x(i)}" y="${H-6}" text-anchor="middle">${yr}</text>`});
+  if(o.bars){const bw=Math.max(3,(W-L-R)/n*.7);o.stack.forEach((st,si)=>{});
+    for(let i=0;i<n;i++){let acc=0;o.stack.forEach(st=>{const v=st.vals[i];s+=`<rect x="${x(i)-bw/2}" y="${y(acc+v)}" width="${bw}" height="${Math.max(0,y(acc)-y(acc+v))}" fill="${st.color}"/>`;acc+=v})}}
+  else if(o.stack){let base=new Array(n).fill(0);o.stack.forEach(st=>{const top=base.map((b,i)=>b+st.vals[i]);let d='M'+top.map((v,i)=>x(i)+','+y(v)).join('L')+'L'+base.map((b,i)=>x(i)+','+y(b)).reverse().join('L')+'Z';s+=`<path d="${d}" fill="${st.color}" opacity=".92"/>`;base=top})}
+  (o.series||[]).forEach(se=>{
+    if(se.lo&&se.hi){s+=`<path d="M${se.hi.map((v,i)=>x(i)+','+y(v)).join('L')}L${se.lo.map((v,i)=>x(i)+','+y(v)).reverse().join('L')}Z" fill="${se.color}" opacity="${se.bandOp||.18}"/>`}
+    s+=`<path d="M${se.vals.map((v,i)=>x(i)+','+y(v)).join('L')}" fill="none" stroke="${se.color}" stroke-width="${se.w||2}" ${se.dash?`stroke-dasharray="${se.dash}"`:''} stroke-linejoin="round"/>`});
+  const sy=o.mark;if(sy!=null){const i=yrs.indexOf(sy);if(i>=0)s+=`<line x1="${x(i)}" x2="${x(i)}" y1="${T}" y2="${H-B}" stroke="${cv('ink')}" stroke-width="1" stroke-dasharray="3 3" opacity=".6"/>`}
+  s+=`<line id="cur" y1="${T}" y2="${H-B}" stroke="${cv('mute')}" opacity="0"/><rect x="${L}" y="${T}" width="${W-L-R}" height="${H-T-B}" fill="transparent" class="hit"/></svg>`;
+  el.innerHTML=s;
+  const hit=el.querySelector('.hit'),cur=el.querySelector('#cur');
+  const idx=e=>{const r=hit.getBoundingClientRect();const f=(e.clientX-r.left)/r.width;return Math.max(0,Math.min(n-1,Math.round(f*(n-1))))};
+  hit.addEventListener('pointermove',e=>{const i=idx(e);cur.setAttribute('x1',x(i));cur.setAttribute('x2',x(i));cur.setAttribute('opacity',.5);tipShow(e,o.tip(i))});
+  hit.addEventListener('pointerleave',()=>{cur.setAttribute('opacity',0);tipHide()});
+  hit.addEventListener('click',e=>{const yr=yrs[idx(e)];if(o.pick){S.year=yr;sync();render()}});
+}
+const legend=(id,items)=>{$(id).innerHTML=items.map(i=>`<span><i style="background:${i[1]};${i[2]?'opacity:.5':''}"></i>${i[0]}</span>`).join('')};
+const srcColor=s=>cv(s);
+const rangeYears=()=>{const a=[];for(let y=S.y0;y<=S.y1;y++)a.push(y);return a};
+
+function render(){
+  const lb=$('labbanner');if(S.useLab&&typeof OV!=='undefined'&&OV){lb.style.display='';lb.innerHTML='<b>Showing Model-lab results</b> (your Step 1 and Step 2 inputs) in the map, KPIs, charts, tables and policy check for the selected scenario and variant. Bands are '+$('lband').selectedOptions[0].textContent.split(' ')[0]+' for Step 1 and 20 draws for Step 2. Other variants in the comparison table are still the saved runs. Untick the box to return to the saved results.'}else lb.style.display='none';
+  const yr=S.year,i=ix(yr),years=rangeYears(),yi=years.map(ix);
+  const m2=mixOf(S.sc2,S.variant,S.region),T2=tot(m2,i);
+  const f1d=D.fc[S.sc1][S.region];
+  /* KPIs */
+  const pp=popOf(S.region,i);
+  const nf=['hydro','nuclear','solar','wind'].reduce((a,s)=>a+m2[s][i],0);
+  const co2=(m2.coal[i]*EF.coal+m2.gas[i]*EF.gas)/T2;
+  const cagr=(Math.pow(f1d.p50[i]/f1d.p50[0],1/Math.max(1,i))-1)*100;
+  const kp=[['Generation '+yr,f0(f1d.p50[i])+' TWh',`P10–P90: ${f0(f1d.p10[i])}–${f0(f1d.p90[i])} · ${S.sc1.split(' (')[0]}`],
+   ['Growth 2027→'+yr,i?fp(cagr)+' / yr':'–','CAGR, central path'],
+   ['Non-fossil share',fp(nf/T2*100),`Hydro+nuclear+solar+wind · ${f0(nf)} TWh`],
+   ['Wind + solar',f0(m2.wind[i]+m2.solar[i])+' TWh',fp((m2.wind[i]+m2.solar[i])/T2*100)+' of generation'],
+   ['Coal',f0(m2.coal[i])+' TWh',fp(m2.coal[i]/T2*100)+' of generation'],
+   ['Population '+yr,f0(pp)+' m',`Urban share 2011: ${fp(urbOf(S.region)*100)} · 2047 midpoint ${(+$('l1pop')?.value||1.64).toFixed(2)} bn`],
+   ['Generation per person',f0(pp?f1d.p50[i]*1000/pp*1:0)+' kWh','Generation, not consumption'],
+   ['Grid CO₂ intensity',co2.toFixed(2)+' t/MWh','Direct, coal + gas (IPCC default factors)']];
+  $('kpis').innerHTML=kp.map(k=>`<div class="kpi"><div class="l">${k[0]} · ${S.region}</div><div class="v">${k[1]}</div><div class="s">${k[2]}</div></div>`).join('');
+
+  /* MAP */
+  renderMap();
+
+  /* Step 1 chart */
+  const col=cv('accent');let ser=[],lg=[];
+  if(S.yoy){const g=f1d.g;ser.push({vals:yi.map(k=>g[k]??g[1]),color:col,w:2.4});lg.push([S.sc1+' · P50 yearly growth',col]);
+    if(S.ovs)Object.keys(D.fc).filter(k=>k!==S.sc1).forEach((k,j)=>{const c=['#e07b2a','#9b6fb5','#2f7fc1'][j%3];const gg=D.fc[k][S.region].g;ser.push({vals:yi.map(q=>gg[q]??gg[1]),color:c,w:1.4});lg.push([k,c])});
+    const all=ser.flatMap(s=>s.vals);const mx=Math.max(...all)*1.1;
+    chart($('ch1'),{el:$('ch1'),years,series:ser,ymax:mx,ymin:0,yf:v=>v.toFixed(1)+'%',mark:yr,pick:1,tip:j=>`<b>${years[j]}</b>${ser.map((s,q)=>`${lg[q][0].split(' ·')[0]}: ${s.vals[j].toFixed(2)}%`).join('<br>')}`});
+  }else{
+    ser.push({vals:yi.map(k=>f1d.p50[k]),lo:S.band?yi.map(k=>f1d.p10[k]):null,hi:S.band?yi.map(k=>f1d.p90[k]):null,color:col,w:2.6});lg.push([S.sc1+' · P50'+(S.band?' with P10–P90 band':''),col]);
+    if(S.ovs)Object.keys(D.fc).filter(k=>k!==S.sc1).forEach((k,j)=>{const c=['#e07b2a','#9b6fb5','#2f7fc1'][j%3];ser.push({vals:yi.map(q=>D.fc[k][S.region].p50[q]),color:c,w:1.5,dash:'5 3'});lg.push([k+' · P50',c])});
+    if(S.ovn&&S.region==='India'){Object.entries(D.sens).filter(([k])=>k!=='baseline').forEach(([k,v],j)=>{const c=cv('mute');ser.push({vals:yi.map(q=>v[q]),color:c,w:1,dash:'1 3'});});lg.push(['Sensitivity cases (dotted)',cv('mute')])}
+    const mx=Math.max(...ser.flatMap(s=>(s.hi||s.vals)));
+    chart($('ch1'),{years,series:ser,ymax:mx*1.05,mark:yr,pick:1,yf:f0,tip:j=>{const k=yi[j];let h=`<b>${years[j]} · ${S.region}</b>P50: ${f0(f1d.p50[k])} TWh<br>P10–P90: ${f0(f1d.p10[k])}–${f0(f1d.p90[k])}`;if(S.ovs)Object.keys(D.fc).filter(q=>q!==S.sc1).forEach(q=>h+=`<br>${q.split(' (')[0]}: ${f0(D.fc[q][S.region].p50[k])}`);if(S.ovn&&S.region==='India')Object.entries(D.sens).forEach(([q,v])=>h+=`<br>${q}: ${f0(v[k])}`);return h}});
+  }
+  legend('lg1',lg);
+  $('s1sub').textContent=`${S.region} · ${S.sc1} · ${S.yoy?'yearly growth of the central path':'TWh, central path with P10–P90 band'}. Click the chart to set the year.`+(S.ovn&&S.region!=='India'?' Sensitivity cases are available for India only.':'');
+
+  /* Step 2 mix chart */
+  const act=SRC.filter(s=>S.src[s]);const pct=S.unit==='pct';
+  const val=(s,k)=>pct?m2[s][k]/tot(m2,k)*100:m2[s][k];
+  const st=act.map(s=>({name:s,color:srcColor(s),vals:yi.map(k=>val(s,k))}));
+  const stTop=yi.map((k,j)=>st.reduce((a,q)=>a+q.vals[j],0));
+  const mx2=pct?100:Math.max(...stTop,...(S.ctype==='lines'?st.flatMap(q=>q.vals):[0]))*1.04;
+  const tip2=j=>{const k=yi[j];return `<b>${years[j]} · ${S.region}</b>`+act.map(s=>`${SNAME[s]}: ${pct?fp(val(s,k)):f0(m2[s][k])+' TWh ('+fp(m2[s][k]/tot(m2,k)*100)+')'}`).join('<br>')+`<br>Total: ${f0(tot(m2,k))} TWh`};
+  if(S.ctype==='lines'){chart($('ch2'),{years,series:st.map(q=>({vals:q.vals,color:q.color,w:2.2})),ymax:mx2,yf:pct?v=>v+'%':f0,mark:yr,pick:1,tip:tip2})}
+  else chart($('ch2'),{years,stack:st,bars:S.ctype==='bars',ymax:mx2,ticks:pct?[0,25,50,75,100]:null,yf:pct?v=>v+'%':f0,mark:yr,pick:1,tip:tip2});
+  legend('lg2',act.map(s=>[SNAME[s],srcColor(s)]));
+  $('s2sub').textContent=`${S.region} · ${S.variant} · ${S.sc2.split(' (')[0]} growth · ${pct?'% of generation':'TWh'} (central). Click to set the year.`;
+
+  /* Regional mix at selected year */
+  const rows=REG.map(r=>{const m=mixOf(S.sc2,S.variant,r),t=tot(m,i);return {r,m,t}});
+  const H3=300,W3=Math.max(300,$('ch3').clientWidth),L3=72,bh=26,gap=10;
+  const maxT=Math.max(...rows.slice(1).map(q=>q.t),rows[0].t);
+  let s3=`<svg viewBox="0 0 ${W3} ${rows.length*(bh+gap)+24}">`;
+  rows.forEach((q,j)=>{const yy=j*(bh+gap)+4;const scale=pct?(W3-L3-60)/100:(W3-L3-60)/maxT;let acc=0;
+    s3+=`<text x="${L3-8}" y="${yy+bh/2+4}" text-anchor="end" style="font-weight:${q.r===S.region?700:400};fill:${q.r===S.region?cv('accent'):cv('mute')}">${q.r}</text>`;
+    act.forEach(s=>{const v=pct?q.m[s][i]/q.t*100:q.m[s][i];s3+=`<rect data-r="${q.r}" data-s="${s}" x="${L3+acc*scale}" y="${yy}" width="${Math.max(0,v*scale)}" height="${bh}" fill="${srcColor(s)}" style="cursor:pointer"/>`;acc+=v});
+    s3+=`<text x="${L3+acc*scale+6}" y="${yy+bh/2+4}">${pct?'':f0(q.t)}</text>`});
+  s3+='</svg>';$('ch3').innerHTML=s3;
+  $('ch3').querySelectorAll('rect').forEach(r=>{r.addEventListener('pointermove',e=>{const q=rows.find(z=>z.r===r.dataset.r),s=r.dataset.s;tipShow(e,`<b>${q.r} · ${yr}</b>${SNAME[s]}: ${f0(q.m[s][i])} TWh (${fp(q.m[s][i]/q.t*100)})`)});r.addEventListener('pointerleave',tipHide);r.addEventListener('click',()=>{S.region=r.dataset.r;sync();render()})});
+  $('s3sub').textContent=`${yr} · ${S.variant} · ${pct?'% share':'TWh'} by source. Click a bar to focus the region.`;
+
+  /* Source explorer */
+  const src=S.msrc;const rg=D.rng[S.sc2][S.variant][S.region][src];
+  const key=pct?['slo','shi']:['lo','hi'];const base=pct?m2[src].map((v,k)=>v/tot(m2,k)*100):m2[src];
+  const ser4=[{vals:yi.map(k=>base[k]),lo:S.band?yi.map(k=>rg[key[0]][k]):null,hi:S.band?yi.map(k=>rg[key[1]][k]):null,color:srcColor(src),w:2.6,bandOp:.22}];const lg4=[[SNAME[src]+' · '+S.variant.split(' (')[0],srcColor(src)]];
+  let cmpv=null;
+  if(S.cmp!=='none'){const mc=mixOf(S.sc2,S.cmp,S.region);cmpv=pct?mc[src].map((v,k)=>v/tot(mc,k)*100):mc[src];ser4.push({vals:yi.map(k=>cmpv[k]),color:cv('ink'),w:1.6,dash:'5 3'});lg4.push([S.cmp.split(' (')[0]+' (compare)',cv('ink')])}
+  const mx4=Math.max(...ser4.flatMap(q=>q.hi||q.vals));
+  chart($('ch4'),{years,series:ser4,ymax:mx4*1.05,yf:pct?v=>v+'%':f0,mark:yr,pick:1,tip:j=>{const k=yi[j];let h=`<b>${years[j]} · ${S.region} · ${SNAME[src]}</b>Central: ${pct?fp(base[k]):f0(base[k])+' TWh'}<br>P10–P90: ${pct?fp(rg.slo[k])+'–'+fp(rg.shi[k]):f0(rg.lo[k])+'–'+f0(rg.hi[k])}`;if(cmpv)h+=`<br>Compare: ${pct?fp(cmpv[k]):f0(cmpv[k])}`;return h}});
+  legend('lg4',lg4);
+  $('s4sub').textContent=`${SNAME[src]} in ${S.region}, ${S.sc2.split(' (')[0]} growth. Change the source in the filter bar. Band = P10–P90 of 150 draws.`;
+
+  /* Variant table */
+  const vs=Object.keys(D.mix[S.sc2]);
+  const mainv=vs[0].startsWith('Main')?vs[0]:'Main (policy-weighted, nuclear ~9%)';
+  let h='<tr><th>Variant · '+yr+'</th>'+SRC.map(s=>`<th>${SNAME[s].replace('Natural ','')}</th>`).join('')+'<th>CO₂ t/MWh</th></tr>';
+  vs.forEach(v=>{const m=mixOf(S.sc2,v,S.region),t=tot(m,i);const e=(m.coal[i]*EF.coal+m.gas[i]*EF.gas)/t;
+    h+=`<tr class="${v===S.variant?'sel':''}" data-v="${v}" style="cursor:pointer"><td>${v}</td>`+SRC.map(s=>`<td>${pct?fp(m[s][i]/t*100):f0(m[s][i])}</td>`).join('')+`<td>${e.toFixed(2)}</td></tr>`});
+  $('vt').innerHTML=h;$('vt').querySelectorAll('tr[data-v]').forEach(r=>r.onclick=()=>{S.variant=r.dataset.v;sync();render()});
+  $('s5sub').textContent=`${S.region} · ${S.sc2.split(' (')[0]} growth · ${pct?'% of generation':'TWh'}. Click a row to select that variant.`;
+
+  /* Policy check */
+  const P=D.pol[S.sc2];const p=P[S.variant];
+  const ser6=[{vals:yi.map(k=>p.co2[k]),color:cv('accent'),w:2.8},{vals:yi.map(k=>p.lin[k]),color:cv('warn'),w:1.8,dash:'6 3'},{vals:yi.map(k=>p.front[k]),color:cv('ink'),w:1.4,dash:'2 3'}];
+  Object.entries(P).filter(([v])=>v!==S.variant).forEach(([v,q])=>ser6.push({vals:yi.map(k=>q.co2[k]),color:cv('mute'),w:1,dash:'',op:1}));
+  const mx6=Math.max(...ser6.flatMap(q=>q.vals));
+  chart($('ch6'),{years,series:ser6,ymax:mx6*1.05,ymin:0,yf:v=>v.toFixed(2),mark:yr,pick:1,tip:j=>{const k=yi[j];return `<b>${years[j]} · India</b>Grid CO₂: ${p.co2[k].toFixed(3)} t/MWh<br>Linear path to 2070: ${p.lin[k].toFixed(3)}<br>Front-loaded net-zero path: ${p.front[k].toFixed(3)}<br>Wind+solar: ${f0(p.vre[k])} TWh<br>Coal yearly change: ${p.coalg[k]==null?'–':p.coalg[k].toFixed(1)+'%'}`}});
+  legend('lg6',[[S.variant.split(' (')[0]+' (grid CO₂)',cv('accent')],['Linear path to net-zero 2070',cv('warn')],['Front-loaded path',cv('ink')],['Other variants (grey)',cv('mute')]]);
+  const mL=p.co2.filter((v,k)=>v<=p.lin[k]).length,mF=p.co2.filter((v,k)=>v<=p.front[k]).length;
+  $('pnote').innerHTML=`Years at or under the linear path: <b class="${mL>=21?'pill-ok':'pill-no'}">${mL}/21</b> · under the front-loaded path: <b class="${mF>=21?'pill-ok':'pill-no'}">${mF}/21</b>. India, ${S.sc2.split(' (')[0]} growth. Direct CO₂ from coal (0.95) and gas (0.45 t/MWh).`;
+  $('s6sub').textContent='Compared with the net-zero-2070 paths we test (our assumption for the path shape).';
+  if(typeof whyRender==='function')whyRender();if(typeof LAB!=='undefined'&&LAB.ready)labRender();
+}
+
+function renderMap(){
+  const m=S.map,i=ix(S.year);const R5=REG.slice(1);
+  const val=r=>{
+    if(m==='gen')return D.fc[S.sc1][r].p50[i];
+    if(m==='pop')return popOf(r,i);
+    if(m==='urb')return urbOf(r)*100;
+    if(m==='pc')return D.fc[S.sc1][r].p50[i]*1000/popOf(r,i);
+    if(m==='chg')return (D.fc[S.sc1][r].p50[i]/D.fc[S.sc1][r].p50[0]-1)*100;
+    const mm=mixOf(S.sc2,S.variant,r);return m==='share'?mm[S.msrc][i]/tot(mm,i)*100:mm[S.msrc][i]};
+  const vals=R5.map(val),mn=Math.min(...vals,0),mx=Math.max(...vals);
+  const u=m==='share'||m==='chg'||m==='urb'?'%':m==='pop'?' m':m==='pc'?' kWh':' TWh';const lab=m==='gen'?'Generation':m==='pop'?'Population':m==='pc'?'Generation per person':m==='urb'?'Urban share 2011':m==='chg'?'Growth since 2027':(m==='share'?'Share of ':'TWh of ')+SNAME[S.msrc];
+  $('mapsub').textContent=`${lab} · ${S.year} · ${m==='gen'||m==='chg'||m==='pc'?S.sc1.split(' (')[0]+' growth':S.variant.split(' (')[0]}. Click a region to focus it.`;
+  $('gmin').textContent=f0(mn)+u;$('gmax').textContent=f0(mx)+u;
+  let s=`<svg viewBox="-4 14 372 366" style="max-height:430px">`;
+  R5.forEach(r=>{const op=.12+.88*((val(r)-mn)/((mx-mn)||1));s+=`<path data-r="${r}" d="${GEO[r]}" fill="${cv('accent')}" fill-opacity="${op.toFixed(2)}" class="${S.region===r?'sel':''}"/>`;if(GEO['isl_'+r])s+=`<path data-r="${r}" data-isl="1" d="${GEO['isl_'+r]}" fill="${cv('accent')}" fill-opacity="${op.toFixed(2)}" class="${S.region===r?'sel':''}"/>`});
+  s+=`<g class="lbl"></g></svg>`;
+  $('mapbox').innerHTML=s;
+  const svg=$('mapbox').firstChild;const g=svg.querySelector('.lbl');
+  const addEv=(p,r)=>{p.addEventListener('click',()=>{S.region=S.region===r?'India':r;sync();render()});
+    p.addEventListener('pointermove',e=>{const f=D.fc[S.sc1][r];const mm=mixOf(S.sc2,S.variant,r);tipShow(e,`<b>${r} · ${S.year}</b>Generation: ${f0(f.p50[i])} TWh (P10–P90 ${f0(f.p10[i])}–${f0(f.p90[i])})<br>Coal ${fp(mm.coal[i]/tot(mm,i)*100)} · Solar ${fp(mm.solar[i]/tot(mm,i)*100)} · Wind ${fp(mm.wind[i]/tot(mm,i)*100)}`)});
+    p.addEventListener('pointerleave',tipHide)};
+  svg.querySelectorAll('path').forEach(p=>{const r=p.dataset.r;
+    if(p.dataset.isl){addEv(p,r);return}const bb=p.getBBox();const off={North:[-6,6],West:[0,6],South:[0,20],East:[2,10],NorthEast:[0,-4]}[r]||[0,0];
+    g.insertAdjacentHTML('beforeend',`<text x="${bb.x+bb.width/2+off[0]}" y="${bb.y+bb.height/2+off[1]}">${r==='NorthEast'?'NE':r}</text>`);
+    addEv(p,r)});
+  const rk=R5.map(r=>({r,v:val(r)})).sort((a,b)=>b.v-a.v);
+  $('rank').innerHTML=rk.map(q=>`<div class="${S.region===q.r?'sel':''}" data-r="${q.r}"><b>${q.r}</b><span class="bar"><i style="width:${Math.max(2,(q.v-mn)/((mx-mn)||1)*100)}%"></i></span><span style="text-align:right">${f0(q.v)}${u}</span></div>`).join('');
+  $('rank').querySelectorAll('div').forEach(d=>d.onclick=()=>{S.region=d.dataset.r;sync();render()});
+}
+
+function renderStatic(){
+  const I=D.ind,fl=(v,d=1)=>v==null?'–':(+v).toFixed(d);
+  $('it').innerHTML='<tr><th>Region</th><th>Coal</th><th>Solar</th><th>Wind</th><th>Hydro</th><th>Nuclear</th><th>GHI</th><th>Pop 2024 m</th><th>Urban 2011</th></tr>'+I.map(r=>`<tr><td>${r.region}</td><td>${fl(r.coal_2027_pct,0)}→${fl(r.coal_2047_pct,0)}%</td><td>${fl(r.solar_2027_pct,0)}→${fl(r.solar_2047_pct,0)}%</td><td>${fl(r.wind_2027_pct,0)}→${fl(r.wind_2047_pct,0)}%</td><td>${fl(r.hydro_2027_pct,0)}→${fl(r.hydro_2047_pct,0)}%</td><td>${fl(r.nuclear_2027_pct,0)}→${fl(r.nuclear_2047_pct,0)}%</td><td>${r.ghi_kwh_m2_day==null?'–':fl(r.ghi_kwh_m2_day,2)}</td><td>${typeof C!=='undefined'&&C?f0(pop24Of(r.region)):'–'}</td><td>${typeof C!=='undefined'&&C?fp(urbOf(r.region)*100):'–'}</td></tr>`).join('');
+  $('lt').innerHTML='<tr><th>Lever</th><th>Value</th><th>Source</th><th>How used</th><th>Status</th></tr>'+D.lev.map(r=>`<tr><td>${r.lever}</td><td style="white-space:normal">${r.value_and_year}</td><td style="white-space:normal;text-align:left">${r.source}</td><td style="white-space:normal;text-align:left">${r.how_used_in_model}</td><td style="white-space:normal;text-align:left">${r.status}</td></tr>`).join('');
+}
+
+function sync(){
+  if(S.sync)S.sc2=S.sc1;
+  $('year').value=S.year;$('yearv').textContent=S.year;
+  ['region','sc1','sc2','variant','cmp','map','msrc','y0','y1'].forEach(k=>$(k).value=S[k]);
+  ['band','ovs','ovn','yoy','sync'].forEach(k=>$(k).checked=S[k]);$('uselab').checked=!!S.useLab;
+  $('unit').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.unit));
+  $('ctype').querySelectorAll('button').forEach(b=>b.classList.toggle('on',b.dataset.v===S.ctype));
+  $('sc2').disabled=S.sync;
+  document.querySelectorAll('#srcchips input').forEach(c=>c.checked=!!S.src[c.dataset.s]);
+}
+function opts(id,arr,lab){$(id).innerHTML=arr.map(v=>`<option value="${v}">${lab?lab(v):v}</option>`).join('')}
+function init(){
+  opts('region',REG);opts('sc1',Object.keys(D.fc));opts('sc2',Object.keys(D.fc));
+  const vs=Object.keys(D.mix[Object.keys(D.fc)[0]]);opts('variant',vs);opts('cmp',['none',...vs],v=>v==='none'?'None':v);
+  opts('msrc',SRC,s=>SNAME[s]);const ys=D.years;opts('y0',ys);opts('y1',ys);
+  $('srcchips').innerHTML=SRC.map(s=>`<label class="chip"><input type="checkbox" data-s="${s}" checked><i style="background:var(--${s})"></i>${SNAME[s]}</label>`).join('');
+  $('srcchips').addEventListener('change',e=>{S.src[e.target.dataset.s]=e.target.checked?1:0;if(!Object.values(S.src).some(Boolean)){S.src[e.target.dataset.s]=1}sync();render()});
+  const bind=(id,k,num)=>$(id).addEventListener('change',e=>{S[k]=num?+e.target.value:e.target.value;if(S.y0>S.y1){if(k==='y0')S.y1=S.y0;else S.y0=S.y1}sync();render()});
+  ['region','sc1','sc2','variant','cmp','map','msrc'].forEach(k=>bind(k,k));bind('y0','y0',1);bind('y1','y1',1);
+  $('year').addEventListener('input',e=>{S.year=+e.target.value;sync();render()});
+  ['band','ovs','ovn','yoy','sync'].forEach(k=>$(k).addEventListener('change',e=>{S[k]=e.target.checked;sync();render()}));
+  $('unit').addEventListener('click',e=>{if(e.target.dataset.v){S.unit=e.target.dataset.v;sync();render()}});
+  $('ctype').addEventListener('click',e=>{if(e.target.dataset.v){S.ctype=e.target.dataset.v;sync();render()}});
+  $('uselab').onchange=e=>{S.useLab=e.target.checked;if(S.useLab&&LAB.ready)labRun(false);else{ovRestore();render()}};
+  $('pin').onchange=e=>document.querySelector('.panel').classList.toggle('pin',e.target.checked);
+  $('reset').onclick=()=>{ovRestore();S=JSON.parse(JSON.stringify(DEF));sync();render()};
+  let tm=null;$('play').onclick=()=>{if(tm){clearInterval(tm);tm=null;$('play').textContent='▶';return}$('play').textContent='❚❚';if(S.year>=2047)S.year=2026;tm=setInterval(()=>{S.year++;if(S.year>=2047){clearInterval(tm);tm=null;$('play').textContent='▶'}sync();render()},650)};
+  if($('csv'))$('csv').onclick=()=>{try{const m=mixOf(S.sc2,S.variant,S.region),rg=D.rng[S.sc2][S.variant][S.region];let c='year,source,twh_central,twh_p10,twh_p90,share_pct_central,share_pct_p10,share_pct_p90\n';D.years.forEach((y,k)=>SRC.forEach(s=>{c+=[y,s,m[s][k],rg[s].lo[k],rg[s].hi[k],(m[s][k]/tot(m,k)*100).toFixed(2),rg[s].slo[k],rg[s].shi[k]].join(',')+'\n'}));const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([c],{type:'text/csv'}));a.download=`mix_${S.region}_${S.variant.split(' ')[0]}.csv`;a.click()}catch(e){alert('Download is not available in this view.')}};
+  new ResizeObserver(()=>{clearTimeout(window.__rt);window.__rt=setTimeout(render,120)}).observe(document.body);
+  renderStatic();sync();render();
+}
+Promise.all([fetch('data.json').then(r=>r.json()),fetch('geo.json').then(r=>r.json()),fetch('consts.json').then(r=>r.json())]).then(([d,g,cc])=>{D=d;GEO=g;C=cc;init();labInit(cc)}).catch(e=>{document.body.insertAdjacentHTML('afterbegin','<p style="padding:20px">Could not load model data: '+e+'</p>')});
+</script>
+</body>
+</html>

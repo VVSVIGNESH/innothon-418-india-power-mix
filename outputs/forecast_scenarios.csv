@@ -1,0 +1,19 @@
+scenario,region,p10_twh,p50_twh,p90_twh
+Low growth (~5%),North,1078.0,1297.0,1565.0
+Low growth (~5%),West,1497.0,1799.0,2168.0
+Low growth (~5%),South,979.0,1196.0,1461.0
+Low growth (~5%),East,634.0,765.0,926.0
+Low growth (~5%),NorthEast,51.0,63.0,77.0
+Low growth (~5%),India,4239.0,5119.0,6196.0
+Base (~6-6.5%),North,1295.0,1627.0,2047.0
+Base (~6-6.5%),West,1798.0,2257.0,2835.0
+Base (~6-6.5%),South,1178.0,1500.0,1911.0
+Base (~6-6.5%),East,762.0,960.0,1211.0
+Base (~6-6.5%),NorthEast,62.0,79.0,100.0
+Base (~6-6.5%),India,5096.0,6423.0,8104.0
+High: Viksit Bharat (~7.5-8%),North,1608.0,2128.0,2810.0
+High: Viksit Bharat (~7.5-8%),West,2233.0,2951.0,3894.0
+High: Viksit Bharat (~7.5-8%),South,1462.0,1962.0,2625.0
+High: Viksit Bharat (~7.5-8%),East,947.0,1256.0,1663.0
+High: Viksit Bharat (~7.5-8%),NorthEast,77.0,103.0,138.0
+High: Viksit Bharat (~7.5-8%),India,6328.0,8401.0,11131.0

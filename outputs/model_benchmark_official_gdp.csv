@@ -1,0 +1,6 @@
+model,2020,2021,2022,2023,MAPE_%
+Naive trend CAGR,6.0,3.1,-0.5,-2.3,3.0
+"Ours beta=1.0, actual drivers",-5.1,-3.7,-4.9,-3.1,4.2
+"Ours beta fitted 0.75, actual drivers",-3.4,-4.0,-6.7,-6.8,5.2
+"Ours beta=1.0, trended drivers",7.4,5.8,3.5,2.9,4.9
+"Ours beta fitted 0.75, trended drivers",6.0,3.1,-0.5,-2.3,3.0
